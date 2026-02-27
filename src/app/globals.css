@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-display: var(--font-fraunces);
+  --font-mono: var(--font-jetbrains-mono);
+
+  --color-bg: #FFFFFЕ;
+  --color-surface: #F7F7F4;
+  --color-border: #E5E4E0;
+  --color-text: #1A1A18;
+  --color-muted: #7A7A77;
+  --color-accent: #1D4ED8;
+  --color-accent-faint: #EEF2FF;
+  --color-warning: #92400E;
+  --color-warning-faint: #FFFBEB;
+}
+
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: #FFFFFF;
+    color: #1A1A18;
+    font-family: var(--font-geist-sans), system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  code, pre, kbd {
+    font-family: var(--font-jetbrains-mono), 'Courier New', monospace;
+  }
+
+  ::selection {
+    background: #DBEAFE;
+    color: #1E3A8A;
+  }
+}
