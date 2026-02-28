@@ -43,7 +43,7 @@ export function SideNav() {
           fontSize: "14px",
           letterSpacing: "0.12em",
           textTransform: "uppercase",
-          color: "#ABABAB",
+          color: "#4A4A47",
           marginBottom: "20px",
           fontWeight: 500,
         }}
@@ -64,11 +64,11 @@ export function SideNav() {
                   padding: "10px 0",
                   textDecoration: "none",
                   fontSize: "14px",
-                  color: isActive ? "#1A1A18" : "#9E9E9B",
+                  color: isActive ? "#E8E8E5" : "#5A5A57",
                   fontWeight: isActive ? 500 : 400,
                   transition: "color 0.15s ease",
                   borderLeft: isActive
-                    ? "2px solid #1D4ED8"
+                    ? "2px solid #FEE340"
                     : "2px solid transparent",
                   paddingLeft: "12px",
                   marginLeft: "-2px",
@@ -79,7 +79,7 @@ export function SideNav() {
                     style={{
                       fontSize: "14px",
                       fontFamily: "var(--font-jetbrains-mono)",
-                      color: isActive ? "#1D4ED8" : "#C8C8C4",
+                      color: isActive ? "#FEE340" : "#3A3A38",
                       flexShrink: 0,
                     }}
                   >

@@ -11,8 +11,8 @@ export function VideoPlaceholder({ label, videoId }: VideoPlaceholderProps) {
         position: "relative",
         width: "100%",
         aspectRatio: "16/9",
-        background: "#FAFAFA",
-        border: "1px dashed #D4D4D0",
+        background: "#141412",
+        border: "1px dashed #2E2E2B",
         borderRadius: "8px",
         display: "flex",
         flexDirection: "column",
@@ -26,7 +26,7 @@ export function VideoPlaceholder({ label, videoId }: VideoPlaceholderProps) {
           width: "48px",
           height: "48px",
           borderRadius: "50%",
-          border: "1.5px solid #D4D4D0",
+          border: "1.5px solid #2E2E2B",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -38,7 +38,7 @@ export function VideoPlaceholder({ label, videoId }: VideoPlaceholderProps) {
           xmlns="http://www.w3.org/2000/svg"
           style={{ width: "14px", height: "14px", marginLeft: "2px" }}
         >
-          <path d="M5 3.5L13 8L5 12.5V3.5Z" fill="#C4C4C0" />
+          <path d="M5 3.5L13 8L5 12.5V3.5Z" fill="#3A3A38" />
         </svg>
       </div>
       <div style={{ textAlign: "center" }}>
@@ -47,7 +47,7 @@ export function VideoPlaceholder({ label, videoId }: VideoPlaceholderProps) {
             fontSize: "14px",
             letterSpacing: "0.1em",
             textTransform: "uppercase",
-            color: "#B0B0AC",
+            color: "#3A3A38",
             fontWeight: 500,
             marginBottom: "4px",
           }}
@@ -57,7 +57,7 @@ export function VideoPlaceholder({ label, videoId }: VideoPlaceholderProps) {
         <p
           style={{
             fontSize: "14px",
-            color: "#C8C8C4",
+            color: "#2E2E2B",
           }}
         >
           {label}

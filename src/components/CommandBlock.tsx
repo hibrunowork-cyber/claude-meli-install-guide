@@ -23,14 +23,14 @@ export function CommandBlock({
     <div
       style={{
         position: "relative",
-        background: "#F7F7F4",
+        background: "#1C1C1A",
         borderRadius: "6px",
         padding: "14px 16px",
         paddingRight: "72px",
         display: "flex",
         alignItems: "flex-start",
         gap: "10px",
-        border: "1px solid #EBEBЕ7",
+        border: "1px solid #2A2A27",
       }}
     >
       {showPrompt && (
@@ -38,7 +38,7 @@ export function CommandBlock({
           style={{
             fontFamily: "var(--font-jetbrains-mono)",
             fontSize: "14px",
-            color: "#BABAB6",
+            color: "#3A3A38",
             userSelect: "none",
             flexShrink: 0,
             lineHeight: "22px",
@@ -51,7 +51,7 @@ export function CommandBlock({
         style={{
           fontFamily: "var(--font-jetbrains-mono)",
           fontSize: "14px",
-          color: "#1A1A18",
+          color: "#C8C8C5",
           wordBreak: "break-all",
           lineHeight: "22px",
           flex: 1,
@@ -74,7 +74,7 @@ export function CommandBlock({
           fontSize: "14px",
           fontWeight: 500,
           letterSpacing: "0.03em",
-          color: copied ? "#1D4ED8" : "#9E9E9B",
+          color: copied ? "#FEE340" : "#4A4A47",
           transition: "color 0.15s ease",
           fontFamily: "var(--font-geist-sans)",
           whiteSpace: "nowrap",

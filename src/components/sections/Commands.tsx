@@ -34,13 +34,13 @@ const commands = [
 export function Commands() {
   return (
     <StepCard step={6} title="Comandos Essenciais" id="comandos">
-      <p style={{ fontSize: "14px", color: "#6E6E6A" }}>
+      <p style={{ fontSize: "14px", color: "#888886" }}>
         Referência rápida dos comandos mais usados no dia a dia.
       </p>
 
       <div
         style={{
-          border: "1px solid #E5E4E0",
+          border: "1px solid #2A2A27",
           borderRadius: "8px",
           overflow: "hidden",
         }}
@@ -51,8 +51,8 @@ export function Commands() {
             display: "grid",
             gridTemplateColumns: "160px 1fr 1fr",
             padding: "8px 16px",
-            background: "#FAFAF8",
-            borderBottom: "1px solid #E5E4E0",
+            background: "#171715",
+            borderBottom: "1px solid #2A2A27",
             gap: "16px",
           }}
         >
@@ -63,7 +63,7 @@ export function Commands() {
                 fontSize: "14px",
                 letterSpacing: "0.1em",
                 textTransform: "uppercase",
-                color: "#ABABAB",
+                color: "#4A4A47",
                 fontWeight: 500,
               }}
             >
@@ -79,7 +79,7 @@ export function Commands() {
               display: "grid",
               gridTemplateColumns: "160px 1fr 1fr",
               padding: "11px 16px",
-              borderBottom: i < commands.length - 1 ? "1px solid #F0F0ED" : "none",
+              borderBottom: i < commands.length - 1 ? "1px solid #1E1E1C" : "none",
               alignItems: "center",
               gap: "16px",
             }}
@@ -88,8 +88,8 @@ export function Commands() {
               style={{
                 fontFamily: "var(--font-jetbrains-mono)",
                 fontSize: "14px",
-                color: "#1D4ED8",
-                background: "#EEF2FF",
+                color: "#FEE340",
+                background: "#1F1A00",
                 padding: "2px 7px",
                 borderRadius: "3px",
                 whiteSpace: "nowrap",
@@ -98,14 +98,14 @@ export function Commands() {
             >
               {row.cmd}
             </code>
-            <span style={{ fontSize: "14px", color: "#3A3A36" }}>
+            <span style={{ fontSize: "14px", color: "#B8B8B5" }}>
               {row.func}
             </span>
             <code
               style={{
                 fontFamily: "var(--font-jetbrains-mono)",
                 fontSize: "14px",
-                color: "#9E9E9B",
+                color: "#4A4A47",
               }}
             >
               {row.example}

@@ -15,7 +15,7 @@ const command =
 export function StatusLine() {
   return (
     <StepCard step={5} title="Statusline" id="statusline">
-      <p style={{ fontSize: "14px", color: "#6E6E6A" }}>
+      <p style={{ fontSize: "14px", color: "#888886" }}>
         Configure a statusline para exibir modelo, uso de tokens, projeto e
         branch Git de forma compacta no terminal.
       </p>
@@ -25,7 +25,7 @@ export function StatusLine() {
       {/* Fields reference */}
       <div
         style={{
-          border: "1px solid #E5E4E0",
+          border: "1px solid #2A2A27",
           borderRadius: "8px",
           overflow: "hidden",
         }}
@@ -33,8 +33,8 @@ export function StatusLine() {
         <div
           style={{
             padding: "10px 16px",
-            borderBottom: "1px solid #F0F0ED",
-            background: "#FAFAF8",
+            borderBottom: "1px solid #1E1E1C",
+            background: "#171715",
           }}
         >
           <span
@@ -42,7 +42,7 @@ export function StatusLine() {
               fontSize: "14px",
               letterSpacing: "0.1em",
               textTransform: "uppercase",
-              color: "#ABABAB",
+              color: "#4A4A47",
               fontWeight: 500,
             }}
           >
@@ -57,15 +57,15 @@ export function StatusLine() {
               alignItems: "center",
               gap: "16px",
               padding: "10px 16px",
-              borderBottom: i < fields.length - 1 ? "1px solid #F0F0ED" : "none",
+              borderBottom: i < fields.length - 1 ? "1px solid #1E1E1C" : "none",
             }}
           >
             <code
               style={{
                 fontFamily: "var(--font-jetbrains-mono)",
                 fontSize: "14px",
-                color: "#1D4ED8",
-                background: "#EEF2FF",
+                color: "#FEE340",
+                background: "#1F1A00",
                 padding: "2px 6px",
                 borderRadius: "3px",
                 whiteSpace: "nowrap",
@@ -74,7 +74,7 @@ export function StatusLine() {
             >
               {f.token}
             </code>
-            <span style={{ fontSize: "14px", color: "#6E6E6A" }}>{f.desc}</span>
+            <span style={{ fontSize: "14px", color: "#888886" }}>{f.desc}</span>
           </div>
         ))}
       </div>

@@ -24,7 +24,7 @@ export function StepCard({ step, title, children, id }: StepCardProps) {
           style={{
             fontFamily: "var(--font-jetbrains-mono)",
             fontSize: "14px",
-            color: "#C0C0BC",
+            color: "#3A3A38",
             letterSpacing: "0.06em",
             flexShrink: 0,
             paddingTop: "2px",
@@ -38,7 +38,7 @@ export function StepCard({ step, title, children, id }: StepCardProps) {
             fontSize: "clamp(22px, 3vw, 30px)",
             fontWeight: 300,
             fontStyle: "italic",
-            color: "#1A1A18",
+            color: "#E8E8E5",
             lineHeight: 1.2,
             margin: 0,
           }}

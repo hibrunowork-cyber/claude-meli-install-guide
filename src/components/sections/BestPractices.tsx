@@ -36,7 +36,7 @@ const practices = [
 export function BestPractices() {
   return (
     <StepCard step={7} title="Boas Práticas" id="boas-praticas">
-      <p style={{ fontSize: "14px", color: "#6E6E6A" }}>
+      <p style={{ fontSize: "14px", color: "#888886" }}>
         Dicas para usar o Claude Code com eficiência, segurança e menor custo.
       </p>
 
@@ -45,8 +45,8 @@ export function BestPractices() {
           display: "grid",
           gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
           gap: "1px",
-          background: "#E5E4E0",
-          border: "1px solid #E5E4E0",
+          background: "#2A2A27",
+          border: "1px solid #2A2A27",
           borderRadius: "8px",
           overflow: "hidden",
         }}
@@ -55,7 +55,7 @@ export function BestPractices() {
           <div
             key={p.title}
             style={{
-              background: "#FFFFFF",
+              background: "#171715",
               padding: "22px",
             }}
           >
@@ -70,7 +70,7 @@ export function BestPractices() {
               <span
                 style={{
                   fontSize: "16px",
-                  color: "#C0C0BC",
+                  color: "#3A3A38",
                   fontWeight: 300,
                   lineHeight: 1,
                   width: "18px",
@@ -84,14 +84,14 @@ export function BestPractices() {
                 style={{
                   fontSize: "14px",
                   fontWeight: 600,
-                  color: "#1A1A18",
+                  color: "#E8E8E5",
                   letterSpacing: "0.01em",
                 }}
               >
                 {p.title}
               </span>
             </div>
-            <p style={{ fontSize: "14px", color: "#6E6E6A", lineHeight: 1.6, margin: 0 }}>
+            <p style={{ fontSize: "14px", color: "#666663", lineHeight: 1.6, margin: 0 }}>
               {p.desc}
             </p>
           </div>

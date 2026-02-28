@@ -73,8 +73,8 @@ export function MCPs() {
           display: "flex",
           gap: "12px",
           padding: "14px 16px",
-          background: "#FFFBEB",
-          border: "1px solid #FDE68A",
+          background: "#1A1607",
+          border: "1px solid #3D3208",
           borderRadius: "6px",
         }}
       >
@@ -87,14 +87,14 @@ export function MCPs() {
             fillRule="evenodd"
             clipRule="evenodd"
             d="M8 1.5a.5.5 0 0 1 .434.252l6.5 11A.5.5 0 0 1 14.5 13.5h-13a.5.5 0 0 1-.434-.748l6.5-11A.5.5 0 0 1 8 1.5ZM8 6a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 1 0v-3A.5.5 0 0 0 8 6Zm0 6.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z"
-            fill="#D97706"
+            fill="#F59E0B"
           />
         </svg>
         <div>
-          <p style={{ fontSize: "14px", fontWeight: 500, color: "#92400E", marginBottom: "2px" }}>
+          <p style={{ fontSize: "14px", fontWeight: 500, color: "#FCD34D", marginBottom: "2px" }}>
             Atenção — Tokens de API
           </p>
-          <p style={{ fontSize: "14px", color: "#B45309", lineHeight: 1.55 }}>
+          <p style={{ fontSize: "14px", color: "#D97706", lineHeight: 1.55 }}>
             Nunca exponha tokens em repositórios ou histórico de chat. Substitua{" "}
             <code style={{ fontFamily: "var(--font-jetbrains-mono)", fontSize: "14px" }}>
               SEU_TOKEN_AQUI
@@ -107,7 +107,7 @@ export function MCPs() {
       {/* MCP list */}
       <div
         style={{
-          border: "1px solid #E5E4E0",
+          border: "1px solid #2A2A27",
           borderRadius: "8px",
           overflow: "hidden",
         }}
@@ -117,7 +117,7 @@ export function MCPs() {
             key={mcp.name}
             style={{
               padding: "20px",
-              borderBottom: i < mcps.length - 1 ? "1px solid #F0F0ED" : "none",
+              borderBottom: i < mcps.length - 1 ? "1px solid #1E1E1C" : "none",
             }}
           >
             <div
@@ -128,14 +128,14 @@ export function MCPs() {
                 marginBottom: "10px",
               }}
             >
-              <span style={{ fontSize: "14px", fontWeight: 500, color: "#1A1A18" }}>
+              <span style={{ fontSize: "14px", fontWeight: 500, color: "#E8E8E5" }}>
                 {mcp.name}
               </span>
               <span
                 style={{
                   fontSize: "14px",
-                  color: "#9E9E9B",
-                  borderLeft: "1px solid #E5E4E0",
+                  color: "#5A5A57",
+                  borderLeft: "1px solid #2A2A27",
                   paddingLeft: "10px",
                 }}
               >
@@ -147,8 +147,8 @@ export function MCPs() {
                     fontSize: "14px",
                     letterSpacing: "0.06em",
                     textTransform: "uppercase",
-                    color: "#B45309",
-                    background: "#FEF3C7",
+                    color: "#D97706",
+                    background: "#252008",
                     padding: "2px 6px",
                     borderRadius: "3px",
                     marginLeft: "auto",
@@ -164,7 +164,7 @@ export function MCPs() {
               <p
                 style={{
                   fontSize: "14px",
-                  color: "#9E9E9B",
+                  color: "#5A5A57",
                   marginTop: "8px",
                   lineHeight: 1.5,
                 }}

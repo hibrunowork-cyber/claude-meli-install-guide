@@ -47,13 +47,13 @@ export function Authentication() {
                   width: "26px",
                   height: "26px",
                   borderRadius: "50%",
-                  border: "1px solid #E5E4E0",
+                  border: "1px solid #2A2A27",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   fontSize: "14px",
                   fontFamily: "var(--font-jetbrains-mono)",
-                  color: "#ABABAB",
+                  color: "#4A4A47",
                   flexShrink: 0,
                 }}
               >
@@ -65,7 +65,7 @@ export function Authentication() {
                     width: "1px",
                     flex: 1,
                     marginTop: "6px",
-                    background: "#EBEBЕ7",
+                    background: "#2A2A27",
                     minHeight: "16px",
                   }}
                 />
@@ -73,7 +73,7 @@ export function Authentication() {
             </div>
             {/* Content */}
             <div style={{ paddingBottom: "4px", flex: 1 }}>
-              <p style={{ fontSize: "14px", color: "#3A3A36", marginBottom: s.command ? "10px" : 0 }}>
+              <p style={{ fontSize: "14px", color: "#B8B8B5", marginBottom: s.command ? "10px" : 0 }}>
                 {s.text}
               </p>
               {s.command && <CommandBlock command={s.command} />}

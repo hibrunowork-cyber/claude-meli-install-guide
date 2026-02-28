@@ -1,3 +1,4 @@
+import { BackgroundRippleEffect } from "@/components/ui/background-ripple-effect";
 import { Hero } from "@/components/sections/Hero";
 import { Prerequisites } from "@/components/sections/Prerequisites";
 import { Installation } from "@/components/sections/Installation";
@@ -14,9 +15,12 @@ export default function Home() {
     <div
       style={{
         minHeight: "100vh",
-        background: "#FFFFFF",
+        background: "#0F0F0D",
       }}
     >
+      <BackgroundRippleEffect cellSize={56} />
+
+      <div style={{ position: "relative", zIndex: 1 }}>
       <div
         style={{
           maxWidth: "1080px",
@@ -53,7 +57,7 @@ export default function Home() {
             <div
               style={{
                 height: "1px",
-                background: "#EBEBЕ7",
+                background: "#1E1E1C",
                 marginBottom: "56px",
               }}
             />
@@ -74,7 +78,7 @@ export default function Home() {
                 <div
                   style={{
                     height: "1px",
-                    background: "#F0F0ED",
+                    background: "#1E1E1C",
                     margin: "56px 0",
                   }}
                 />
@@ -84,7 +88,7 @@ export default function Home() {
 
             <footer
               style={{
-                borderTop: "1px solid #F0F0ED",
+                borderTop: "1px solid #1E1E1C",
                 marginTop: "80px",
                 padding: "32px 0 64px",
                 display: "flex",
@@ -97,7 +101,7 @@ export default function Home() {
                   fontSize: "14px",
                   letterSpacing: "0.08em",
                   textTransform: "uppercase",
-                  color: "#C0C0BC",
+                  color: "#3A3A38",
                 }}
               >
                 Claude Code — Guia de Instalação
@@ -105,7 +109,7 @@ export default function Home() {
               <span
                 style={{
                   fontSize: "14px",
-                  color: "#C0C0BC",
+                  color: "#3A3A38",
                   fontFamily: "var(--font-jetbrains-mono)",
                 }}
               >
@@ -124,6 +128,7 @@ export default function Home() {
           }
         }
       `}</style>
+      </div>
     </div>
   );
 }
