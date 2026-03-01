@@ -53,13 +53,15 @@ function PixelFist({ x, y }: { x: number; y: number }) {
   );
 }
 
-export function AnimatedLogo({ className, style }: { className?: string; style?: React.CSSProperties }) {
-  const [frame, setFrame] = useState(0);
+export function AnimatedLogo({ className, style, frame: frameProp }: { className?: string; style?: React.CSSProperties; frame?: number }) {
+  const [internalFrame, setInternalFrame] = useState(0);
+  const frame = frameProp !== undefined ? frameProp : internalFrame;
 
   useEffect(() => {
-    const id = setInterval(() => setFrame((f) => (f + 1) % 2), FRAME_MS);
+    if (frameProp !== undefined) return;
+    const id = setInterval(() => setInternalFrame((f) => (f + 1) % 2), FRAME_MS);
     return () => clearInterval(id);
-  }, []);
+  }, [frameProp]);
 
   const handY = HAND_Y_FRAMES[frame];
 

@@ -110,12 +110,107 @@
 - Tamanhos: ClaudeMascot `height: 60px`, AnimatedLogo `height: 52px`
 - Posição vertical ajustada com `paddingTop: 52px`
 
+## O que foi feito (sessão 2026-03-01 — pixel reveal + UnicornStudio)
+
+- Background `BackgroundRippleEffect` substituído por `UnicornBackground` (UnicornStudio WebGL)
+  - Projeto: `aNQ1HJcO2IvNyDCGls8J`, script v1.4.29, opacity 0.5
+- Slide de instalação (`InstallSlideWithTerminal`) reestruturado como layout standalone flex-row
+  - Título/subtítulo movidos para dentro da coluna esquerda (antes cobriam largura total)
+- Slide de boas-vindas (`WelcomeSlide`) agora é ponto de entrada (state inicia em `0`)
+  - CTA "Começar" em branco
+  - BottomNav com `isFirst = false` — botão Anterior sempre visível (volta para welcome)
+- Pixel reveal no H1 "Guia de Instalação Claude Meli" (depois removido — ver sessão abaixo):
+  - 240 tiles (ROWS=10, COLS=24) com `clip-path: polygon(...)` e fade-in opacity 0→1
+  - Fix de performance: `<AnimatedLogo frame={0} />` nos tiles — 0 timers nos tiles vs. 240 anteriores
+  - `AnimatedLogo.tsx` atualizado: aceita prop `frame` opcional (quando definido, não inicia interval)
+
+## O que foi feito (sessão 2026-03-01 — fade + dots no footer)
+
+- **Pixel reveal removido** — efeito descartado por decisão de design
+- **WelcomeSlide**: H1 agora usa fade sequencial simples
+  - Linha 1 ("Guia de Instalação"): aparece em `opacity + translateY` após 120ms
+  - Linha 2 ("Claude Meli" + logo): aparece após 480ms
+  - Transição: `opacity 0.55s ease, transform 0.55s ease`
+- **Dots de navegação movidos para o footer** (padrão para todos os slides 1–8)
+  - `StepIndicator` (barra do topo com dots + contador) removido completamente
+  - `BottomNav` atualizado: recebe prop `onGoTo`, renderiza dots no centro entre os dois botões
+  - Dot ativo: amarelo (`T.accent`) com largura expandida (24px); anteriores: cinza escuro; futuros: mais escuro ainda
+
+## O que foi feito (sessão 2026-03-01 — layout duas colunas + label)
+
+### Layout duas colunas aplicado a todos os slides (menos capa e slide 1)
+- Novo componente `TwoColSlide`: `maxWidth: 1080px`, `display: flex`, duas colunas separadas por divisória, conteúdo da direita centralizado verticalmente
+- Header (num + título + intro) fixo no topo da coluna esquerda; conteúdo scrollável abaixo
+- `AuthSlide` reestruturado: header movido para `TwoColSlide`, nav vertical fica na esquerda, mockups na direita
+- Slides convertidos:
+  - **02 — Instalação**: já era duas colunas (sem mudança)
+  - **02 — Fazendo login**: nav vertical (esq) + mockups terminal/browser (dir)
+  - **03 — VS Code**: steps (esq) + VS Code window mock com terminal (dir)
+  - **04 — MCPs**: alerta de token (esq) + lista completa de MCPs scrollável (dir)
+  - **05 — Statusline**: comando + tabela de campos (esq) + terminal com preview do statusline (dir)
+  - **06 — Comandos**: lista de comandos (esq) + terminal mostrando comandos em uso (dir)
+  - **07 — Boas práticas**: 4 cards (esq) + 2 cards (dir)
+- Slide **00 — Antes de começar** mantido no layout original (`SlideLayout`, grid 2 colunas, mascote + logo embaixo)
+
+### label.png adicionado à capa
+- `label.png` movido da raiz para `public/label.png`
+- Adicionado na linha do H1 da `WelcomeSlide`, após o `AnimatedLogo` (logo do Meli)
+- Alinhado em `inline-flex` com `height: "0.85em"` — mesmo tamanho relativo dos outros ícones da linha
+
+### Fade de entrada exclusivo para a capa
+- `UnicornBackground`: inicia com `opacity: 0`, transição para `0.5` ao montar (600ms)
+- `WelcomeSlide`: recebe prop `contentDelay` (350ms no load inicial, 0 em retorno)
+- Container da capa: `opacity: 0 → 1` após `contentDelay` ms, transição 500ms
+- Linha 1 e linha 2 do H1: stagger relativo ao `contentDelay` (+120ms e +480ms)
+- Slides 1–8: continuam usando animação horizontal (slideInFromRight/Left)
+- Retorno à capa via "Anterior": usa slideInFromLeft normalmente (sem fade lento)
+
+## O que foi feito (sessão 2026-03-01 — ajustes finais da capa)
+
+- **"Antes de começar"**: conteúdo centralizado horizontalmente (`centered` prop no `SlideLayout` → `alignItems: center, textAlign: center`)
+- **Divisória removida** de todos os slides: `TwoColSlide` e `InstallSlideWithTerminal` (linha `1px` entre colunas excluída)
+- **`Logo_Reveal.mp4`** movido para `public/Logo_Reveal.mp4`
+  - Adicionado na `WelcomeSlide`, canto inferior direito (`position: absolute`, `bottom: 80`, `right: 48`, `width: 176px`)
+  - Play automático após 1100ms do início do fade (depois que linha 2 do H1 termina de aparecer)
+  - Sem loop, sem controles
+  - Fundo preto removido via **SVG luma key filter** (`feColorMatrix` — pixels próximos ao preto viram transparentes, sem depender de `mix-blend-mode` que falha por causa dos stacking contexts dos wrappers)
+  - `mix-blend-mode: screen` descartado — não funcionou corretamente por causa do isolamento de stacking context no SlideShow
+- **`label.png` removido** do H1 da capa (ficava após o logo do Meli)
+
+## O que foi feito (sessão 2026-03-01 — ajustes de polimento + AuthSlide interativo)
+
+### Ajustes de polimento no terminal (Instalação)
+- `vault66-crt-effect` instalado (`npm install vault66-crt-effect`)
+- `TerminalTyper` no slide de instalação: conteúdo envolto por `<CRTEffect>` com `theme="custom"`, `scanlineOpacity={0.02}`, `scanlineColor="rgba(200,200,200,0.02)"`, sem vignette
+- Texto do terminal restaurado para cores originais: `#D8D8D5` (texto), `#5A5A57` (dim), `#FEE340` (prompt), bg `#0E0E0C`
+- Vídeo `Logo_Reveal.mp4`: tamanho reduzido de 220px → 176px → 158px
+
+### Botões ghost amarelos
+- CTA da capa ("Começar"): `background: transparent`, `color: T.accent`, `border: 0.3px solid T.accent`, `fontWeight: 400`
+- Botão "Próximo" no `BottomNav`: mesmo estilo ghost (antes era fundo amarelo cheio)
+
+### AuthSlide — refactor completo
+- **Espaçamento dos steps aumentado**: `padding: 14px 10px`, `marginBottom: 8` (era 10px + 2)
+- **BG amarelo removido** do step ativo — destaque apenas via borda esquerda e cor do texto/círculo
+- **Navegação obrigatória por passo**: tipo `Interceptor` adicionado; `SlideShow` expõe `interceptRef` para `AuthSlide`
+  - Seta direita / "Próximo" avança entre os 6 passos antes de ir pro próximo slide
+  - Seta esquerda / "Anterior" volta entre os passos antes de ir pro slide anterior
+- **Animações criadas** para cada step (componentes: `AuthTermShell`, `AuthStep1–6`):
+  1. `AuthStep1Terminal` — digita `claude`, output de startup linha a linha, loop
+  2. `AuthStep2Terminal` — menu de tema, cursor anima para "Dark", confirma com ✓
+  3. `AuthStep3Terminal` — cursor vai de Method 1 → Method 2, confirma com ✓
+  4. `AuthStep4Browser` — botão "Authorize" clicado (escurece + scale), tela de sucesso ✓
+  5. `AuthStep5Browser` — MercadoLibre selecionado com borda laranja, "Continue" clicado
+  6. `AuthStep6Terminal` — linhas aparecem uma a uma, aceite dos termos, "Welcome!" final
+- `AuthTermShell`: wrapper de terminal compartilhado (sem CRT) para os steps da autenticação
+
+---
+
 ## Pendente / Próximos passos
 
 - [ ] Verificar URLs reais dos MCPs com a equipe (alguns podem estar fictícios)
 - [ ] Verificar formato correto dos comandos `claude mcp add` (pode variar por versão)
 - [ ] Adicionar simulações interativas aos outros slides (ex: VS Code, MCPs) — se desejado
-- [ ] Animação de transição entre passos do AuthSlide (atualmente instantâneo)
 - [ ] Deploy (Vercel ou servidor interno)
 - [ ] Revisão de conteúdo com stakeholders do Mercado Pago
 
