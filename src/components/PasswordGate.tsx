@@ -5,6 +5,8 @@ import { useState, useEffect, useRef } from "react";
 const PASSWORD = "claudemeli";
 const STORAGE_KEY = "claude-guide-auth";
 
+function dispatchAuth() { window.dispatchEvent(new CustomEvent("claude-auth")); }
+
 export function PasswordGate({ children, onAuth }: { children: React.ReactNode; onAuth?: () => void }) {
   const [authed, setAuthed]     = useState(false);
   const [fading, setFading]     = useState(false);
@@ -18,6 +20,7 @@ export function PasswordGate({ children, onAuth }: { children: React.ReactNode; 
     if (sessionStorage.getItem(STORAGE_KEY) === "1") {
       setAuthed(true);
       onAuth?.();
+      dispatchAuth();
     } else {
       setTimeout(() => inputRef.current?.focus(), 100);
     }
@@ -28,7 +31,7 @@ export function PasswordGate({ children, onAuth }: { children: React.ReactNode; 
     if (value === PASSWORD) {
       sessionStorage.setItem(STORAGE_KEY, "1");
       setFading(true);
-      setTimeout(() => { setAuthed(true); onAuth?.(); }, 500);
+      setTimeout(() => { setAuthed(true); onAuth?.(); dispatchAuth(); }, 500);
     } else {
       setError(true);
       setValue("");

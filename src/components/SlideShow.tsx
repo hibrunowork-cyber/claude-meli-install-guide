@@ -687,11 +687,22 @@ function WelcomeSlide({ onNext, contentDelay = 0 }: { onNext: () => void; conten
     const t0 = contentDelay > 0 ? setTimeout(() => setReady(true), contentDelay) : null;
     const t1 = setTimeout(() => setLine1(true), contentDelay + 120);
     const t2 = setTimeout(() => setLine2(true), contentDelay + 480);
+
+    const playVideo = () => { setVideoVisible(true); videoRef.current?.play(); };
+
+    // Só toca se já autenticado (sessão anterior)
     const t3 = setTimeout(() => {
-      setVideoVisible(true);
-      videoRef.current?.play();
+      if (sessionStorage.getItem("claude-guide-auth") === "1") playVideo();
     }, contentDelay + 1100);
-    return () => { if (t0) clearTimeout(t0); clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+
+    // Aguarda evento de autenticação (login na sessão atual)
+    window.addEventListener("claude-auth", playVideo);
+
+    return () => {
+      if (t0) clearTimeout(t0);
+      clearTimeout(t1); clearTimeout(t2); clearTimeout(t3);
+      window.removeEventListener("claude-auth", playVideo);
+    };
   }, []);
 
   const h1Style: CSSProperties = {
