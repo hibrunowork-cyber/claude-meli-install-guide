@@ -25,14 +25,14 @@ const T = {
 
 /* ─── Data ─── */
 const MCPS: { name: string; desc: string; cmd: string; token: boolean; note?: string }[] = [
+  { name: "Figma",                  desc: "Acesso a designs e componentes",     cmd: 'claude mcp add figma --transport http --url "https://figma.com/api/mcp" --header "X-Figma-Token: SEU_TOKEN_AQUI"', token: true, note: "Substitua SEU_TOKEN_AQUI pelo seu Personal Access Token: Figma → Settings → Account → Personal access tokens." },
+  { name: "GitHub",                 desc: "Repositórios, PRs e issues",         cmd: 'claude mcp add github --transport http --url "https://api.github.com/mcp" --header "Authorization: Bearer SEU_TOKEN_AQUI"', token: true, note: "Substitua SEU_TOKEN_AQUI pelo seu Personal Access Token: GitHub → Settings → Developer settings → Tokens." },
   { name: "Secure Code Guardians", desc: "Analisa segurança do código",        cmd: 'claude mcp add secure-code-guardians --transport sse --url "https://mcp.securecodeguardians.io/sse"', token: false },
   { name: "Frontender-Web",         desc: "Padrões de UI e componentes",        cmd: 'claude mcp add frontender-web --transport sse --url "https://mcp.frontender.ai/sse"',              token: false },
   { name: "Documentation – Fury",   desc: "Documentação interna da Fury",       cmd: 'claude mcp add fury-docs --transport sse --url "https://fury-docs-mcp.melioffice.com/sse"',        token: false },
   { name: "BigQuery Insight",       desc: "Consultas e análise de dados",       cmd: 'claude mcp add bigquery-insight --transport sse --url "https://bq-insight-mcp.melioffice.com/sse"', token: false },
   { name: "Traffic Tracking",       desc: "Monitoramento de tráfego",           cmd: 'claude mcp add traffic-tracking --transport sse --url "https://traffic-mcp.melioffice.com/sse"',   token: false },
   { name: "Amplitude",              desc: "Analytics de produto e eventos",     cmd: 'claude mcp add amplitude --transport sse --url "https://amplitude-mcp.melioffice.com/sse"',         token: false },
-  { name: "Figma",                  desc: "Acesso a designs e componentes",     cmd: 'claude mcp add figma --transport http --url "https://figma.com/api/mcp" --header "X-Figma-Token: SEU_TOKEN_AQUI"', token: true, note: "Substitua SEU_TOKEN_AQUI pelo seu Personal Access Token: Figma → Settings → Account → Personal access tokens." },
-  { name: "GitHub",                 desc: "Repositórios, PRs e issues",         cmd: 'claude mcp add github --transport http --url "https://api.github.com/mcp" --header "Authorization: Bearer SEU_TOKEN_AQUI"', token: true, note: "Substitua SEU_TOKEN_AQUI pelo seu Personal Access Token: GitHub → Settings → Developer settings → Tokens." },
 ];
 
 const CMDS = [
@@ -56,7 +56,7 @@ const PRACTICES = [
 ];
 
 /* ─── Layout base de cada slide ─── */
-function SlideLayout({ num, title, intro, children, maxWidth = "1080px", centered = false }: { num: string; title: string; intro?: string; children: ReactNode; maxWidth?: string; centered?: boolean }) {
+function SlideLayout({ num, title, intro, children, maxWidth = "1080px", centered = false, noScroll = false }: { num: string; title: string; intro?: string; children: ReactNode; maxWidth?: string; centered?: boolean; noScroll?: boolean }) {
   return (
     <div style={{ height: "100%", display: "flex", flexDirection: "column", maxWidth, margin: "0 auto", padding: "0 48px", width: "100%", ...(centered && { justifyContent: "center", alignItems: "center", textAlign: "center" }) }}>
       <div style={{ paddingTop: centered ? 0 : "40px", paddingBottom: centered ? "12px" : "22px", flexShrink: 0 }}>
@@ -68,7 +68,7 @@ function SlideLayout({ num, title, intro, children, maxWidth = "1080px", centere
         </h2>
         {intro && <p style={{ fontSize: "16px", color: T.muted, lineHeight: 1.65, margin: 0 }}>{intro}</p>}
       </div>
-      <div style={{ ...(centered ? {} : { flex: 1 }), overflowY: "auto", paddingBottom: "20px", width: "100%" }}>
+      <div style={{ ...(centered ? {} : { flex: 1 }), ...(noScroll ? { overflow: "hidden", display: "flex", flexDirection: "column", minHeight: 0 } : { overflowY: "auto" }), paddingBottom: noScroll ? 0 : "20px", width: "100%" }}>
         {children}
       </div>
     </div>
@@ -82,8 +82,8 @@ function TwoColSlide({ num, title, intro, left, right, maxWidth = "1080px" }: { 
       <div style={{ flex: 1, minWidth: 0, paddingRight: 48, display: "flex", flexDirection: "column", overflow: "hidden", justifyContent: "center" }}>
         <div style={{ flexShrink: 0, marginBottom: 24 }}>
           <span style={{ fontFamily: "var(--font-jetbrains-mono)", fontSize: "14px", color: T.dimmer, letterSpacing: "0.1em", display: "block", marginBottom: "8px" }}>{num}</span>
-          <h2 style={{ fontFamily: "var(--font-fraunces)", fontSize: "clamp(26px, 3.5vw, 38px)", fontWeight: 300, fontStyle: "italic", color: T.text, lineHeight: 1.2, margin: 0, marginBottom: intro ? "12px" : 0 }}>{title}</h2>
-          {intro && <p style={{ fontSize: "16px", color: T.muted, lineHeight: 1.65, margin: 0 }}>{intro}</p>}
+          <h2 style={{ fontFamily: "var(--font-fraunces)", fontSize: "clamp(26px, 3.5vw, 38px)", fontWeight: 300, fontStyle: "italic", color: T.text, lineHeight: 1.2, margin: 0, marginBottom: intro ? "12px" : 0, whiteSpace: "pre-line" }}>{title}</h2>
+          {intro && <p style={{ fontSize: "16px", color: T.muted, lineHeight: 1.65, margin: 0, whiteSpace: "pre-line" }}>{intro}</p>}
         </div>
         <div style={{ flex: "0 0 auto", overflowY: "auto", paddingBottom: "4px" }}>
           {left}
@@ -757,6 +757,125 @@ function WelcomeSlide({ onNext, contentDelay = 0 }: { onNext: () => void; conten
   );
 }
 
+/* ─── Mock painel Figma animado ─── */
+function FigmaTokenMock() {
+  type Phase = "idle" | "typing" | "clicking" | "revealed" | "copied" | "reset";
+  const TOKEN_LABEL = "Claude Code";
+  const FAKE_TOKEN = "figd_xK9mP2qR7vL4nT8wA3cE6jY1";
+
+  const [phase, setPhase]   = useState<Phase>("idle");
+  const [chars, setChars]   = useState(0);
+  const [blink, setBlink]   = useState(true);
+
+  // cursor blink
+  useEffect(() => { const id = setInterval(() => setBlink(b => !b), 530); return () => clearInterval(id); }, []);
+
+  // phase chain
+  useEffect(() => {
+    if (phase === "idle") {
+      const t = setTimeout(() => { setChars(0); setPhase("typing"); }, 1200);
+      return () => clearTimeout(t);
+    }
+    if (phase === "typing") {
+      if (chars < TOKEN_LABEL.length) {
+        const t = setTimeout(() => setChars(c => c + 1), 80);
+        return () => clearTimeout(t);
+      }
+      const t = setTimeout(() => setPhase("clicking"), 600);
+      return () => clearTimeout(t);
+    }
+    if (phase === "clicking") {
+      const t = setTimeout(() => setPhase("revealed"), 400);
+      return () => clearTimeout(t);
+    }
+    if (phase === "revealed") {
+      const t = setTimeout(() => setPhase("copied"), 1800);
+      return () => clearTimeout(t);
+    }
+    if (phase === "copied") {
+      const t = setTimeout(() => { setPhase("reset"); }, 1600);
+      return () => clearTimeout(t);
+    }
+    if (phase === "reset") {
+      const t = setTimeout(() => { setChars(0); setPhase("idle"); }, 800);
+      return () => clearTimeout(t);
+    }
+  }, [phase, chars]);
+
+  const showInput    = phase === "typing" || phase === "clicking";
+  const showToken    = phase === "revealed" || phase === "copied" || phase === "reset";
+  const btnActive    = phase === "clicking";
+  const copied       = phase === "copied";
+
+  const FigmaLogo = () => (
+    <svg viewBox="0 0 38 57" fill="none" style={{ width: 16, height: 16, flexShrink: 0 }}>
+      <path d="M19 28.5a9.5 9.5 0 1 1 19 0 9.5 9.5 0 0 1-19 0z" fill="#1ABCFE"/>
+      <path d="M0 47.5A9.5 9.5 0 0 1 9.5 38H19v9.5a9.5 9.5 0 0 1-19 0z" fill="#0ACF83"/>
+      <path d="M19 0v19h9.5a9.5 9.5 0 0 0 0-19H19z" fill="#FF7262"/>
+      <path d="M0 9.5A9.5 9.5 0 0 0 9.5 19H19V0H9.5A9.5 9.5 0 0 0 0 9.5z" fill="#F24E1E"/>
+      <path d="M0 28.5A9.5 9.5 0 0 0 9.5 38H19V19H9.5A9.5 9.5 0 0 0 0 28.5z" fill="#A259FF"/>
+    </svg>
+  );
+
+  return (
+    <div style={{ background: "#1E1E1E", borderRadius: 10, border: "1px solid #333", overflow: "hidden", fontFamily: "system-ui, sans-serif", fontSize: 13 }}>
+      {/* Topbar */}
+      <div style={{ background: "#2C2C2C", padding: "10px 16px", display: "flex", alignItems: "center", gap: 10, borderBottom: "1px solid #3A3A3A" }}>
+        <FigmaLogo />
+        <span style={{ color: "#CCC", fontSize: 12 }}>Figma — Settings</span>
+      </div>
+
+      {/* Sidebar + content */}
+      <div style={{ display: "flex" }}>
+        <div style={{ width: 140, borderRight: "1px solid #2A2A2A", padding: "16px 0", flexShrink: 0 }}>
+          {["Account", "Security", "Notifications", "Plans", "Integrations"].map((item, i) => (
+            <div key={item} style={{ padding: "7px 16px", fontSize: 12, color: i === 0 ? "#FFF" : "#666", background: i === 0 ? "#3A3A3A" : "transparent" }}>{item}</div>
+          ))}
+        </div>
+
+        <div style={{ flex: 1, padding: "20px 20px 16px", minWidth: 0 }}>
+          <div style={{ fontSize: 15, fontWeight: 600, color: "#FFF", marginBottom: 16 }}>Account</div>
+
+          <div style={{ borderTop: "1px solid #2A2A2A", paddingTop: 14 }}>
+            <div style={{ fontSize: 12, fontWeight: 600, color: "#CCC", marginBottom: 10, letterSpacing: "0.04em" }}>Personal access tokens</div>
+
+            {/* Token gerado — aparece após click */}
+            {showToken && (
+              <div style={{ background: "#2A2A2A", borderRadius: 6, padding: "10px 12px", marginBottom: 10, display: "flex", alignItems: "center", gap: 10, animation: "fadeIn 0.3s ease" }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 12, color: "#EEE", marginBottom: 4 }}>Claude Code</div>
+                  <div style={{ fontSize: 11, color: copied ? "#22C55E" : "#888", fontFamily: "monospace", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", transition: "color 0.3s ease" }}>
+                    {copied ? "✓ Copiado!" : FAKE_TOKEN}
+                  </div>
+                </div>
+                <div style={{ fontSize: 10, color: copied ? "#22C55E" : "#1472FF", background: copied ? "#0D1F12" : "#0D1A2D", padding: "3px 7px", borderRadius: 4, flexShrink: 0, transition: "all 0.3s ease" }}>
+                  {copied ? "✓" : "Copy"}
+                </div>
+              </div>
+            )}
+
+            {/* Input de nome — visível durante digitação */}
+            {showInput && (
+              <div style={{ marginBottom: 10, animation: "fadeIn 0.2s ease" }}>
+                <div style={{ fontSize: 11, color: "#888", marginBottom: 4 }}>Token name</div>
+                <div style={{ background: "#111", border: "1px solid #1472FF", borderRadius: 5, padding: "6px 10px", fontSize: 12, fontFamily: "monospace", color: "#EEE", display: "flex", alignItems: "center" }}>
+                  <span>{TOKEN_LABEL.slice(0, chars)}</span>
+                  <span style={{ display: "inline-block", width: 2, height: 14, background: blink ? "#1472FF" : "transparent", marginLeft: 1, transition: "background 0.1s" }} />
+                </div>
+              </div>
+            )}
+
+            {/* Botão Generate */}
+            <button style={{ background: btnActive ? "#0E5ACC" : "#1472FF", border: "none", borderRadius: 6, padding: "8px 14px", fontSize: 12, color: "#FFF", cursor: "default", fontWeight: 500, transform: btnActive ? "scale(0.96)" : "scale(1)", transition: "all 0.15s ease" }}>
+              + Generate new token
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ─── VS Code terminal animado ─── */
 function VSCodeTerminalAnim() {
   const [chars, setChars] = useState(0);
@@ -832,6 +951,94 @@ function VSCodeTerminalAnim() {
         </div>
       </div>
     </div>
+  );
+}
+
+/* ─── Token input standalone (fora do MCPsSlide para evitar remount a cada keystroke) ─── */
+function MCPTokenInput({ name, value, onChange }: { name: string; value: string; onChange: (v: string) => void }) {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 4, flex: 1, minWidth: 0 }}>
+      <span style={{ fontSize: 11, color: "#D97706", letterSpacing: "0.06em", textTransform: "uppercase", fontWeight: 500 }}>{name}</span>
+      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+        <input
+          type="text"
+          placeholder="Cole seu token"
+          value={value}
+          onChange={e => onChange(e.target.value)}
+          style={{
+            flex: 1, minWidth: 0,
+            background: "#0F0D02",
+            border: `1px solid ${value.trim() ? T.accentBorder : "#3D3208"}`,
+            borderRadius: 4,
+            padding: "5px 10px",
+            fontSize: 12,
+            fontFamily: "var(--font-jetbrains-mono)",
+            color: T.text,
+            outline: "none",
+            transition: "border-color 0.2s ease",
+          }}
+        />
+        {value.trim() && (
+          <svg viewBox="0 0 12 12" fill="none" style={{ width: 12, height: 12, flexShrink: 0 }}>
+            <path d="M2 6L5 9L10 3" stroke={T.green} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ─── Slide MCPs com inputs de token e scroll ─── */
+function MCPsSlide() {
+  const [tokens, setTokens] = useState<Record<string, string>>({});
+
+  const getCmd = (mcp: typeof MCPS[0]) => {
+    if (!mcp.token) return mcp.cmd;
+    const val = tokens[mcp.name]?.trim();
+    return val ? mcp.cmd.replace("SEU_TOKEN_AQUI", val) : mcp.cmd;
+  };
+
+  const tokenMcps = MCPS.filter(m => m.token);
+
+  return (
+    <SlideLayout num="04" title="Expandindo o Claude" intro="Os MCPs são como apps extras — cada um adiciona uma nova habilidade ao Claude:" noScroll>
+      {/* Barra de aviso + inputs de token na mesma linha */}
+      <div style={{ display: "flex", alignItems: "center", gap: 16, padding: "12px 16px", background: "#1A1607", border: "1px solid #3D3208", borderRadius: 6, marginBottom: 18 }}>
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 8, flex: 1, minWidth: 0 }}>
+          <svg viewBox="0 0 16 16" fill="none" style={{ width: 15, height: 15, flexShrink: 0, marginTop: 1 }}>
+            <path fillRule="evenodd" clipRule="evenodd" d="M8 1.5a.5.5 0 0 1 .434.252l6.5 11A.5.5 0 0 1 14.5 13.5h-13a.5.5 0 0 1-.434-.748l6.5-11A.5.5 0 0 1 8 1.5ZM8 6a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 1 0v-3A.5.5 0 0 0 8 6Zm0 6.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" fill="#F59E0B" />
+          </svg>
+          <p style={{ fontSize: 13, color: "#D97706", lineHeight: 1.5, margin: 0 }}>
+            <strong style={{ color: "#FCD34D" }}>Token necessário?</strong><br />Cole ao lado — o comando é atualizado automaticamente.
+          </p>
+        </div>
+        <div style={{ width: 1, alignSelf: "stretch", background: "#3D3208", flexShrink: 0 }} />
+        <div style={{ display: "flex", gap: 12, flex: 1, minWidth: 0 }}>
+          {tokenMcps.map(mcp => (
+            <MCPTokenInput
+              key={mcp.name}
+              name={mcp.name}
+              value={tokens[mcp.name] || ""}
+              onChange={v => setTokens(t => ({ ...t, [mcp.name]: v }))}
+            />
+          ))}
+        </div>
+      </div>
+
+      <div style={{ border: `1px solid ${T.border}`, borderRadius: 8, overflow: "hidden", flex: 1, overflowY: "auto", marginBottom: 16 }}>
+        {MCPS.map((mcp, i) => (
+          <div key={mcp.name} style={{ padding: "16px 18px", borderBottom: i < MCPS.length - 1 ? `1px solid ${T.sub}` : "none" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
+              <span style={{ fontSize: 14, fontWeight: 500, color: T.text }}>{mcp.name}</span>
+              <span style={{ fontSize: 13, color: T.dim, borderLeft: `1px solid ${T.border}`, paddingLeft: 10 }}>{mcp.desc}</span>
+              {mcp.token && <span style={{ fontSize: 10, letterSpacing: "0.06em", textTransform: "uppercase", color: "#D97706", background: "#252008", padding: "2px 6px", borderRadius: 3, marginLeft: "auto", flexShrink: 0 }}>token</span>}
+            </div>
+            <CommandBlock command={getCmd(mcp)} />
+            {mcp.note && <p style={{ fontSize: 13, color: T.dim, marginTop: 8, lineHeight: 1.55 }}>{mcp.note}</p>}
+          </div>
+        ))}
+      </div>
+    </SlideLayout>
   );
 }
 
@@ -916,36 +1123,29 @@ const SLIDES: SlideRender[] = [
     />
   ),
 
-  /* 5 — MCPs */
+  /* 5 — Token Figma */
   () => (
-    <SlideLayout num="04" title="Expandindo o Claude" intro="Os MCPs são como apps extras — cada um adiciona uma nova habilidade ao Claude:">
-      <div style={{ display: "flex", gap: 10, padding: "12px 16px", background: "#1A1607", border: "1px solid #3D3208", borderRadius: 6, marginBottom: 18 }}>
-        <svg viewBox="0 0 16 16" fill="none" style={{ width: 15, height: 15, flexShrink: 0, marginTop: 1 }}>
-          <path fillRule="evenodd" clipRule="evenodd" d="M8 1.5a.5.5 0 0 1 .434.252l6.5 11A.5.5 0 0 1 14.5 13.5h-13a.5.5 0 0 1-.434-.748l6.5-11A.5.5 0 0 1 8 1.5ZM8 6a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 1 0v-3A.5.5 0 0 0 8 6Zm0 6.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" fill="#F59E0B" />
-        </svg>
-        <p style={{ fontSize: 14, color: "#D97706", lineHeight: 1.55, margin: 0 }}>
-          <strong style={{ color: "#FCD34D" }}>Atenção com tokens:</strong> Substitua{" "}
-          <code style={{ fontFamily: "var(--font-jetbrains-mono)", fontSize: 13 }}>SEU_TOKEN_AQUI</code>{" "}
-          pelo valor real antes de executar. Nunca compartilhe tokens.
-        </p>
-      </div>
-      <div style={{ border: `1px solid ${T.border}`, borderRadius: 8, overflow: "hidden" }}>
-        {MCPS.map((mcp, i) => (
-          <div key={mcp.name} style={{ padding: "14px 18px", borderBottom: i < MCPS.length - 1 ? `1px solid ${T.sub}` : "none" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
-              <span style={{ fontSize: 14, fontWeight: 500, color: T.text }}>{mcp.name}</span>
-              <span style={{ fontSize: 13, color: T.dim, borderLeft: `1px solid ${T.border}`, paddingLeft: 10 }}>{mcp.desc}</span>
-              {mcp.token && <span style={{ fontSize: 10, letterSpacing: "0.06em", textTransform: "uppercase", color: "#D97706", background: "#252008", padding: "2px 6px", borderRadius: 3, marginLeft: "auto", flexShrink: 0 }}>token</span>}
-            </div>
-            <CommandBlock command={mcp.cmd} />
-            {mcp.note && <p style={{ fontSize: 13, color: T.dim, marginTop: 6, lineHeight: 1.55 }}>{mcp.note}</p>}
-          </div>
-        ))}
-      </div>
-    </SlideLayout>
+    <TwoColSlide
+      num="04"
+      title={"Gerando seu\ntoken do Figma"}
+      intro="Gere um Personal Access Token:"
+      left={
+        <ol style={{ listStyle: "none", padding: 0, margin: 0 }}>
+          <StepItem num={1}>Acesse <strong style={{ color: T.sec, fontWeight: 500 }}>figma.com</strong> e faça login com sua conta Meli.</StepItem>
+          <StepItem num={2}>Clique no seu <strong style={{ color: T.sec, fontWeight: 500 }}>avatar</strong> (canto superior direito) → <strong style={{ color: T.sec, fontWeight: 500 }}>Settings</strong>.</StepItem>
+          <StepItem num={3}>Na aba <strong style={{ color: T.sec, fontWeight: 500 }}>Account</strong>, role até <strong style={{ color: T.sec, fontWeight: 500 }}>Personal access tokens</strong>.</StepItem>
+          <StepItem num={4}>Clique em <strong style={{ color: T.sec, fontWeight: 500 }}>Generate new token</strong>, dê um nome (ex: <code style={{ fontFamily: "var(--font-jetbrains-mono)", fontSize: 12, color: T.accent }}>Claude Code</code>) e confirme.</StepItem>
+          <StepItem num={5} last><strong style={{ color: T.accent, fontWeight: 500 }}>Copie o token gerado</strong> — ele aparece uma única vez. Cole na próxima tela.</StepItem>
+        </ol>
+      }
+      right={<FigmaTokenMock />}
+    />
   ),
 
-  /* 6 — Statusline */
+  /* 6 — MCPs */
+  () => <MCPsSlide />,
+
+  /* 7 — Statusline */
   () => (
     <TwoColSlide
       num="05"
@@ -996,7 +1196,7 @@ const SLIDES: SlideRender[] = [
     />
   ),
 
-  /* 7 — Comandos */
+  /* 8 — Comandos */
   () => (
     <TwoColSlide
       num="06"
@@ -1045,12 +1245,12 @@ const SLIDES: SlideRender[] = [
     />
   ),
 
-  /* 8 — Boas Práticas */
+  /* 9 — Boas Práticas */
   () => (
-    <SlideLayout num="07" title="Dicas para usar bem" intro="Hábitos que fazem diferença no dia a dia:">
+    <SlideLayout num="07" title="Dicas para usar bem" intro="Hábitos que fazem diferença no dia a dia:" centered>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1px", background: T.border, border: `1px solid ${T.border}`, borderRadius: 8, overflow: "hidden" }}>
         {PRACTICES.map(p => (
-          <div key={p.title} style={{ background: T.surface, padding: 20 }}>
+          <div key={p.title} style={{ background: T.surface, padding: 20, textAlign: "left" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
               <span style={{ fontSize: 14, color: T.dimmer, fontWeight: 300, lineHeight: 1, width: 18, textAlign: "center", flexShrink: 0 }}>{p.icon}</span>
               <span style={{ fontSize: 14, fontWeight: 600, color: T.text }}>{p.title}</span>

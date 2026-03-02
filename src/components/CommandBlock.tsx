@@ -64,8 +64,7 @@ export function CommandBlock({
         style={{
           position: "absolute",
           right: "12px",
-          top: "50%",
-          transform: "translateY(-50%)",
+          bottom: "10px",
           background: "none",
           border: "none",
           cursor: "pointer",
